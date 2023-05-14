@@ -3,7 +3,8 @@ COMMAND:   .byte   0
 START:     .word   0x1000
 LED:       .half   0
 
-COMMAND_TABLE:
+
+ROUTINE_TABLE:
     .word   routine0_adress 
     .word   routine1_adress
     .word   routine2_adress
@@ -21,97 +22,128 @@ COMMAND_TABLE:
     .word   routine14_adress
     .word   routine15_adress    
 
+
 .text
 
-move $t0, 2
+#Attesa di due secondi
+li $t0, 15000000000     #Metto in t0 2 secondi di attesa (contatore)
 
 routine0_adress:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine0_adress
-    
+    addi $t0, $t0, -1   #decremento il contatore di 1
+    bne $t0, $zero, routine0_adress    #Verifica che il contatore non sia uguale a 0 e continua il loop
+    jr $ra
 
 routine1_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine1_adress
+    jr $ra
     
 routine2_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine2_adress
+    jr $ra
     
 routine3_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine3_adress
+    jr $ra
     
 routine4_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine4_adress
+    jr $ra
     
 routine5_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine5_adress
+    jr $ra
     
 routine6_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine6_adress
+    jr $ra
     
 routine7_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine7_adress
+    jr $ra
     
 routine8_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine8_adress
+    jr $ra
     
 routine9_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine9_adress
+    jr $ra
     
 routine10_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine10_adress
+    jr $ra
     
 routine11_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine11_adress
+    jr $ra
     
 routine12_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine12_adress
+    jr $ra
     
 routine13_adress:
     addi $t0, $t0, -1
-    bne $t0, $zero, routine11_adress
+    bne $t0, $zero, routine13_adress
+    jr $ra
     
 routine14_adress:
     addi $t0, $t0, -1
-    bne $t0, $zero, routine12_adress
+    bne $t0, $zero, routine14_adress
+    jr $ra
     
 routine15_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine15_adress
+    jr $ra
 
 
-#Effettuo il complemento bit a bit dei 4 bit meno significativi
+#Core del programma
 
 main:
  la $t1, START
  la $t2, COMMAND
  la $t3, LED
+<<<<<<< HEAD
+=======
+ 
+ lw $t4, START
+ beq $t4, START, controllo_comando
+ jr $ra
+
+>>>>>>> 9e1805149048e5b90ded79a15b9f04d65c9a9e0a
 
 # Estrazione del comando COMMAND nei 2 nybble rispettivamente più significativi e meno significativi.
 # Nel nybble meno significativi, effettuo il complemento bit a bit
 
-lb $t4, 0($t2)          # esempio:                                1110 0001  
-andi $t4, $t2, 0x0F     # Estraggo il nybble piu significativo --> 0000 0001
-andi $t5, $t2, 0xF0     # Estraggo il nybble meno significativo --> 1110 0000
+=======
+controllo_comando:
+lb $t5, 0($t2)          #Esempio:                                   1110 0001  
+andi $t5, $t2, 0xF0     #Estraggo il nybble piu significativo  -->  1110 0000
+andi $t6, $t2, 0x0F     #Estraggo il nybble meno significativo -->  0000 0001
+xor	$t6, $t6, $t5       # --> 1110 0001 , mi permette di fare il complemento bit a bit.
+bne $t5, $t6, errore
+sll $t5, $t5, 2         #Moltiplica il nybble più significativo per 4 per ottenere l'offset
+lui $t7, ROUTINE_TABLE  #Carica l'indirizzo della Routine_Table nel registro t7
+add $t7, $t7, $t5       #Aggiunge a t7 il nibbly più significativo per calcolare l'indirizzo della routine richiesta
+jr $t7                  #Salta all'indirizzo della routine richiesta
+>>>>>>> 9e1805149048e5b90ded79a15b9f04d65c9a9e0a
 
-xor	$t5, $t5, $t4       # --> 1110 0001 , mi permette di fare il complemento bit a bit.
 
-bne $t4, $t5, errore    # Bisogna gestire l'errore
+# Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
 
-
-sll $t4, $t4, 2
-
+<<<<<<< HEAD
 
 errore:
     li $t1, 60          # Imposta il contatore a 60 (numero di secondi)
@@ -141,3 +173,5 @@ end_loop:
     lw $ra, 4($sp)
     jr $ra               # Ritorna alla chiamata della funzione
 
+=======
+>>>>>>> 9e1805149048e5b90ded79a15b9f04d65c9a9e0a
