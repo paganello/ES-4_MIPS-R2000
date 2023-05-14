@@ -115,19 +115,14 @@ main:
  la $t1, START
  la $t2, COMMAND
  la $t3, LED
-<<<<<<< HEAD
-=======
- 
  lw $t4, START
  beq $t4, START, controllo_comando
  jr $ra
 
->>>>>>> 9e1805149048e5b90ded79a15b9f04d65c9a9e0a
 
 # Estrazione del comando COMMAND nei 2 nybble rispettivamente più significativi e meno significativi.
 # Nel nybble meno significativi, effettuo il complemento bit a bit
 
-=======
 controllo_comando:
 lb $t5, 0($t2)          #Esempio:                                   1110 0001  
 andi $t5, $t2, 0xF0     #Estraggo il nybble piu significativo  -->  1110 0000
@@ -138,12 +133,9 @@ sll $t5, $t5, 2         #Moltiplica il nybble più significativo per 4 per otten
 lui $t7, ROUTINE_TABLE  #Carica l'indirizzo della Routine_Table nel registro t7
 add $t7, $t7, $t5       #Aggiunge a t7 il nibbly più significativo per calcolare l'indirizzo della routine richiesta
 jr $t7                  #Salta all'indirizzo della routine richiesta
->>>>>>> 9e1805149048e5b90ded79a15b9f04d65c9a9e0a
 
 
 # Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
-
-<<<<<<< HEAD
 
 errore:
     li $t1, 60          # Imposta il contatore a 60 (numero di secondi)
@@ -172,6 +164,3 @@ delay_loop:
 end_loop:
     lw $ra, 4($sp)
     jr $ra               # Ritorna alla chiamata della funzione
-
-=======
->>>>>>> 9e1805149048e5b90ded79a15b9f04d65c9a9e0a
