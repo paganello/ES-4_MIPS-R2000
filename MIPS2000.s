@@ -159,7 +159,7 @@ controllo_start:
     jr $t4                              # Salta all'indirizzo della routine richiesta
 
 
-# Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
+# Allocazione spazio dello stack delle chiamate
 
 errore:
     addi $sp, $sp, -12          # Alloca spazio nello stack (4 word)
@@ -168,8 +168,13 @@ errore:
     ls $t3, 8($sp)              # Salva il registo $t3 nello stack in quanto poi viene sovrascritto
     ls $t4, 12($sp)             # Salva il registo $t4 nello stack in quanto poi viene sovrascritto
 
+# Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
+
     li $t1, 60                  # Imposta il contatore a 60 (numero di secondi)
     li $t4, 2                   # Imposta il secondo contatore a 2 (numero di secondi)
+
+
+# lampeggio led
 
 led_loop:
     sw $zero, 0($v0)            # Scrive il valore 0 nella cella LED (led spento)
@@ -186,10 +191,14 @@ led_loop:
     jal delay_loop
 
 
+# Gestione contatore con contatore a 60 secondi
+
 delay_loop:
     addi $t4, $t4, -400         # Decrementa il contatore del ritardo di (1/500000000)*2 secondi, espresso in microsecondi
     bnez $t4, delay_loop        # Ripeti il ciclo finché il contatore non è zero
 
+
+# Dealloca spazio dello stack delle chiamate
 
 end_loop:
     lw $ra, 0($sp)              # Ripristina i registri precedentemente salvati nello stack
