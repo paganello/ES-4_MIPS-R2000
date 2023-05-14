@@ -115,8 +115,9 @@ main:
  la $t1, START
  la $t2, COMMAND
  la $t3, LED
- lw $t4, START
- beq $t4, START, controllo_comando
+ 
+ lw $t4, START     
+ beq $t4, 0x1000, controllo_comando
  jr $ra
 
 
@@ -131,7 +132,7 @@ xor	$t6, $t6, $t5       # --> 1110 0001 , mi permette di fare il complemento bit
 bne $t5, $t6, errore
 sll $t5, $t5, 2         #Moltiplica il nybble più significativo per 4 per ottenere l'offset
 lui $t7, ROUTINE_TABLE  #Carica l'indirizzo della Routine_Table nel registro t7
-add $t7, $t7, $t5       #Aggiunge a t7 il nibbly più significativo per calcolare l'indirizzo della routine richiesta
+add $t7, $t7, $t5       #Aggiunge a t7 il nybble più significativo per calcolare l'indirizzo della routine richiesta
 jr $t7                  #Salta all'indirizzo della routine richiesta
 
 
