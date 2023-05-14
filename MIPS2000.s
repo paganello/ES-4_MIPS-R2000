@@ -29,8 +29,8 @@ ROUTINE_TABLE:
 li $t0, 15000000000     #Metto in t0 2 secondi di attesa (contatore)
 
 routine0_adress:
-    addi $t0, $t0, -1   #decremento il contatore di 1
-    bne $t0, $zero, routine0_adress    #Verifica che il contatore non sia uguale a 0 e continua il loop
+    addi $t0, $t0, -1                   #decremento il contatore di 1
+    bne $t0, $zero, routine0_adress     #Verifica che il contatore non sia uguale a 0 e continua il loop
     jr $ra
 
 routine1_adress:
@@ -116,9 +116,9 @@ main:
  la $t2, COMMAND
  la $t3, LED
  
- lw $t4, START     
- beq $t4, 0x1000, controllo_comando
- jr $ra
+ lw $t4, START                               # Inserisce in t4 il contenuto di START
+ beq $t4, 0x1000, controllo_comando          # Verifica che START corrisponde a 100H, se è true, va in "controllo_comando"
+ jr $ra                                      # Esce dal programma
 
 
 # Estrazione del comando COMMAND nei 2 nybble rispettivamente più significativi e meno significativi.
