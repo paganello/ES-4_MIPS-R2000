@@ -1,13 +1,13 @@
-.data
-COMMAND:   .byte   0
-START:     .word   0x1000
-LED:       .half   0
+.data   0x10000000
+COMMAND:   .byte   0x00
+START:     .word   0x00
+LED:       .half   0x00
 
 
 ROUTINE_TABLE:
 
-    .word   routine0_adress 
-    .word   routine1_adress
+    .word   routine0_adress  
+    .word   routine1_adress  
     .word   routine2_adress
     .word   routine3_adress
     .word   routine4_adress
@@ -112,31 +112,43 @@ routine15_adress:
 
 #Core del programma
 
-main:
- la $t1, START
- la $t2, COMMAND
- la $v0, LED
- 
- lw $t4, START                               # Inserisce in t4 il contenuto di START
- beq $t4, 0x1000, controllo_comando          # Verifica che START corrisponde a 100H, se è true, va in "controllo_comando"
- jr $ra                                      # Esce dal programma
+main: 
+    la $v0, LED
+ver_command:  
+    lb  $t1, 0(COMMAND)             # Recupero da command il fato
+    andi $t1, $t1, 0x000000ff
+    bne $t1, $zero, send_1000H_to_CPU       # Verifica se in Command, se è true, va in "controllo_comando"
+    j ver_command
+
+send_1000H_to_CPU:
+    addi $t0, $zero, 0x31303030480a
+    sw $t0, 0(START)
+    j controllo_start             # torna al programma
 
 
 # Estrazione del comando COMMAND nei 2 nybble rispettivamente più significativi e meno significativi.
 # Nel nybble meno significativi, effettuo il complemento bit a bit
 
-controllo_comando:
-    lb $t5, 0($t2)          # Esempio:                                   1110 0001  
+controllo_start:
+    lw	$t0, 0(START)		# 
+    addi $t2, $zero, 0x31303030480a
+    bne $t0, $t2, controllo_start
 
-    andi $t5, $t2, 0xF0     # Estraggo il nybble piu significativo  -->  1110 0000
-    andi $t6, $t2, 0x0F     # Estraggo il nybble meno significativo -->  0000 0001
-    xor	$t6, $t6, $t5       # --> 1110 0001 , mi permette di fare il complemento bit a bit.
-    bne $t5, $t6, errore
+    add $t2, $zero, $zero
+    add $t1, $zero, $zero
 
-    sll $t5, $t5, 2         # Moltiplica il nybble più significativo per 4 per ottenere l'offset
-    lui $t7, ROUTINE_TABLE  # Carica l'indirizzo della Routine_Table nel registro t7
-    add $t7, $t7, $t5       # Aggiunge a t7 il nibbly più significativo per calcolare l'indirizzo della routine richiesta
-    jr $t7                  # Salta all'indirizzo della routine richiesta
+    lb $t1, 0(COMMAND)      # Esempio:                                 1110 0001  
+    andi $t1, $t1, 0x000000ff
+
+    andi $t2, $t1, 0x000000F0      # Estraggo il nybble piu significativo  -->  1110 0000
+    andi $t3, $t1, 0x0000000F     # Estraggo il nybble meno significativo -->  0000 0001
+    xor	$t3, $t3, $t2       # --> 1110 0001 , mi permette di fare il complemento bit a bit.
+    bne $t1, $t3, errore
+
+    sll $t2, $t2, 4         # Moltiplica il nybble più significativo per 16 per ottenere l'offset
+    lui $t4, 0x10001500     # Carica l'indirizzo della Routine_Table nel registro t7
+    add $t4, $t4, $t2       # Aggiunge a t7 il nibbly più significativo per calcolare l'indirizzo della routine richiesta
+    jr $t4                  # Salta all'indirizzo della routine richiesta
 
 
 # Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
