@@ -119,11 +119,10 @@ xor	$t6, $t6, $t5       # --> 1110 0001 , mi permette di fare il complemento bit
 
 bne $t5, $t6, errore
 
-sll $t5, $t5, 2
-lui $t7, ROUTINE_TABLE
-add $t7, $t7, $t5
-jr $t7
-
+sll $t5, $t5, 2         #Moltiplica il nybble più significativo per 4 per ottenere l'offset
+lui $t7, ROUTINE_TABLE  #Carica l'indirizzo della Routine_Table nel registro t7
+add $t7, $t7, $t5       #Aggiunge a t7 il nibbly più significativo per calcolare l'indirizzo della routine richiesta
+jr $t7                  #Salta all'indirizzo della routine richiesta
 
 
 # Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi
