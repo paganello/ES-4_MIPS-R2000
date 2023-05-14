@@ -22,37 +22,102 @@ COMMAND_TABLE:
     .word   routine15_adress    
 
 .text
+
+move $t0, 2
+
 routine0_adress:
-    #codice routine 0
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine0_adress
+
 routine1_adress:
-    #cordice routine 2
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine1_adress
+    
 routine2_adress:
-    #cordice routine 2
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine2_adress
+    
 routine3_adress:
-    #cordice routine 2
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine3_adress
+    
 routine4_adress:
-    #cordice routine 2
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine4_adress
+    
 routine5_adress:
-    #cordice routine 
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine5_adress
+    
 routine6_adress:
-    #cordice routine 
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine6_adress
+    
 routine7_adress:
-    #cordice routine 
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine7_adress
+    
 routine8_adress:
-    #cordice routine 
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine8_adress
+    
 routine9_adress:
-    #cordice routine 
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine9_adress
+    
 routine10_adress:
-    #cordice routine 
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine10_adress
+    
 routine11_adress:
-    #cordice routine 
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine11_adress
+    
 routine12_adress:
-    #cordice routine 
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine12_adress
+    
 routine13_adress:
-    #cordice routine 
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine11_adress
+    
 routine14_adress:
-    #cordice routine 
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine12_adress
+    
 routine15_adress:
-    #cordice routine 
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine15_adress
+
+
+#Effettuo il complemento bit a bit dei 4 bit meno significativi
 
 main:
+ li $t1, START
+ li $t2, COMMAND
+ li $t3, LED
+
+#Estrazione del comando COMMAND nei 2 nybble rispettivamente più significativi e meno significativi.
+#Nel nybble meno significativi, effettuo il complemento bit a bit
+
+lb $t4, 0($t2)
+andi $t4, $t2, 0xFO
+andi $t5, $t2, 0x0F 
+xor $t6, $t6, $t5
+
+bne $t4, $t5, errore    #bisogna gestire lerrore
+
+
+errore:
+li $t7, 60
+
+
+lampeggio:
+li $t0, 15000000000
+loop: addi $t0, $t0, -1
+bne $t0, $zero, loop
+
+
+loop:
+lw $t4, 0($t1)
+beq $t4,  , loop
