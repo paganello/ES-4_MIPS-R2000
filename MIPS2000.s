@@ -115,8 +115,9 @@ main:
  la $t1, START
  la $t2, COMMAND
  la $t3, LED
- lw $t4, START
- beq $t4, START, controllo_comando
+ 
+ lw $t4, START     
+ beq $t4, 0x1000, controllo_comando
  jr $ra
 
 
