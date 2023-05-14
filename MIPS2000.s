@@ -81,11 +81,11 @@ routine12_adress:
     
 routine13_adress:
     addi $t0, $t0, -1
-    bne $t0, $zero, routine11_adress
+    bne $t0, $zero, routine13_adress
     
 routine14_adress:
     addi $t0, $t0, -1
-    bne $t0, $zero, routine12_adress
+    bne $t0, $zero, routine14_adress
     
 routine15_adress:
     addi $t0, $t0, -1
