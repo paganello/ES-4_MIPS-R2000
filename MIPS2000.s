@@ -1,7 +1,7 @@
 .data
-COMMAND_ADDR:   .byte   0
-START_ADDR:     .word   0
-LED_ADDR:       .half   0
+COMMAND:   .byte   0
+START:     .word   0x1000
+LED:       .half   0
 
 COMMAND_TABLE:
     .word   routine0_adress 
@@ -28,6 +28,7 @@ move $t0, 2
 routine0_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine0_adress
+    
 
 routine1_adress:
     addi $t0, $t0, -1
@@ -101,23 +102,22 @@ main:
 #Nel nybble meno significativi, effettuo il complemento bit a bit
 
 lb $t4, 0($t2)
-andi $t4, $t2, 0xFO
-andi $t5, $t2, 0x0F 
-xor $t6, $t6, $t5
+andi $t4, $t2, 0xF0     #Estraggo il nybble più significativo
+andi $t5, $t2, 0x0F     #Estraggo il nybble meno significativo
+xor $t5, $t5, $t4       #Effettuo il bit a bit del nybble meno significativo
 
-bne $t4, $t5, errore    #bisogna gestire lerrore
+bne $t4, $t5, errore    #bisogna gestire l'errore
+
+sll $
 
 
+# Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi
 errore:
-li $t7, 60
+li $t6, 60    # Carica il conteggio di 60 secondi in $t6
 
 
+# Effettua il lampeggio
 lampeggio:
 li $t0, 15000000000
 loop: addi $t0, $t0, -1
 bne $t0, $zero, loop
-
-
-loop:
-lw $t4, 0($t1)
-beq $t4,  , loop
