@@ -24,72 +24,89 @@ ROUTINE_TABLE:
 
 
 .text
-move $t0, 2
+
+#Attesa di due secondi
+li $t0, 15000000000     #Metto in t0 2 secondi di attesa (contatore)
 
 routine0_adress:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine0_adress
-    
+    addi $t0, $t0, -1   #decremento il contatore di 1
+    bne $t0, $zero, routine0_adress    #Verifica che il contatore non sia uguale a 0 e continua il loop
+    jr $ra
 
 routine1_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine1_adress
+    jr $ra
     
 routine2_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine2_adress
+    jr $ra
     
 routine3_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine3_adress
+    jr $ra
     
 routine4_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine4_adress
+    jr $ra
     
 routine5_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine5_adress
+    jr $ra
     
 routine6_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine6_adress
+    jr $ra
     
 routine7_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine7_adress
+    jr $ra
     
 routine8_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine8_adress
+    jr $ra
     
 routine9_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine9_adress
+    jr $ra
     
 routine10_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine10_adress
+    jr $ra
     
 routine11_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine11_adress
+    jr $ra
     
 routine12_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine12_adress
+    jr $ra
     
 routine13_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine13_adress
+    jr $ra
     
 routine14_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine14_adress
+    jr $ra
     
 routine15_adress:
     addi $t0, $t0, -1
     bne $t0, $zero, routine15_adress
+    jr $ra
 
 
 #Core del programma
@@ -119,8 +136,9 @@ add $t7, $t7, $t5       #Aggiunge a t7 il nibbly più significativo per calcolar
 jr $t7                  #Salta all'indirizzo della routine richiesta
 
 
-# Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi errore:
+# Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
 
+errore:
 li $t8, 60              # Carica il conteggio di 60 secondi in $t6
 
 
