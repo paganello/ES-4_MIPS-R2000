@@ -95,9 +95,9 @@ routine15_adress:
 #Core del programma
 
 main:
- li $t1, START
- li $t2, COMMAND
- li $t3, LED
+ la $t1, START
+ la $t2, COMMAND
+ la $t3, LED
  
  lw $t4, START
  beq $t4, START, controllo_comando
