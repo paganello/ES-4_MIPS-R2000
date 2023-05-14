@@ -124,15 +124,17 @@ main:
 # Nel nybble meno significativi, effettuo il complemento bit a bit
 
 controllo_comando:
-lb $t5, 0($t2)          #Esempio:                                   1110 0001  
-andi $t5, $t2, 0xF0     #Estraggo il nybble piu significativo  -->  1110 0000
-andi $t6, $t2, 0x0F     #Estraggo il nybble meno significativo -->  0000 0001
-xor	$t6, $t6, $t5       # --> 1110 0001 , mi permette di fare il complemento bit a bit.
-bne $t5, $t6, errore
-sll $t5, $t5, 2         #Moltiplica il nybble più significativo per 4 per ottenere l'offset
-lui $t7, ROUTINE_TABLE  #Carica l'indirizzo della Routine_Table nel registro t7
-add $t7, $t7, $t5       #Aggiunge a t7 il nibbly più significativo per calcolare l'indirizzo della routine richiesta
-jr $t7                  #Salta all'indirizzo della routine richiesta
+    lb $t5, 0($t2)          # Esempio:                                   1110 0001  
+
+    andi $t5, $t2, 0xF0     # Estraggo il nybble piu significativo  -->  1110 0000
+    andi $t6, $t2, 0x0F     # Estraggo il nybble meno significativo -->  0000 0001
+    xor	$t6, $t6, $t5       # --> 1110 0001 , mi permette di fare il complemento bit a bit.
+    bne $t5, $t6, errore
+
+    sll $t5, $t5, 2         # Moltiplica il nybble più significativo per 4 per ottenere l'offset
+    lui $t7, ROUTINE_TABLE  # Carica l'indirizzo della Routine_Table nel registro t7
+    add $t7, $t7, $t5       # Aggiunge a t7 il nibbly più significativo per calcolare l'indirizzo della routine richiesta
+    jr $t7                  # Salta all'indirizzo della routine richiesta
 
 
 # Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
