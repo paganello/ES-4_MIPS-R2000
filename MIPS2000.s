@@ -108,7 +108,8 @@ xor $t5, $t5, $t4       #Effettuo il bit a bit del nybble meno significativo
 
 bne $t4, $t5, errore    #bisogna gestire l'errore
 
-sll $
+sll $t4, $t4, 2
+
 
 
 # Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi
