@@ -101,12 +101,14 @@ main:
 #Estrazione del comando COMMAND nei 2 nybble rispettivamente più significativi e meno significativi.
 #Nel nybble meno significativi, effettuo il complemento bit a bit
 
-lb $t4, 0($t2)
-andi $t4, $t2, 0xF0     #Estraggo il nybble più significativo
-andi $t5, $t2, 0x0F     #Estraggo il nybble meno significativo
-xor $t5, $t5, $t4       #Effettuo il bit a bit del nybble meno significativo
+lb $t4, 0($t2)          # esempio:                                1110 0001  
+andi $t4, $t2, 0x0F     #Estraggo il nybble piu significativo --> 0000 0001
+andi $t5, $t2, 0xF0     #Estraggo il nybble meno significativo --> 1110 0000
+
+xor	$t5, $t5, $t4   # --> 1110 0001 , mi permette di fare il complemento bit a bit.
 
 bne $t4, $t5, errore    #bisogna gestire l'errore
+
 
 sll $t4, $t4, 2
 
