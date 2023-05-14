@@ -5,6 +5,7 @@ LED:       .half   0
 
 
 ROUTINE_TABLE:
+
     .word   routine0_adress 
     .word   routine1_adress
     .word   routine2_adress
@@ -114,7 +115,7 @@ routine15_adress:
 main:
  la $t1, START
  la $t2, COMMAND
- la $t3, LED
+ la $v0, LED
  
  lw $t4, START                               # Inserisce in t4 il contenuto di START
  beq $t4, 0x1000, controllo_comando          # Verifica che START corrisponde a 100H, se è true, va in "controllo_comando"
@@ -141,17 +142,23 @@ controllo_comando:
 # Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
 
 errore:
+    addi $sp, $sp, -12  # Alloco spazio nello stack (4 word)
+    ls $ra, 0($sp)      # Salvo il registo $ra nello stack in quanto poi viene sovrascritto
+    ls $t1, 4($sp)      # Salvo il registo $t1 nello stack in quanto poi viene sovrascritto
+    ls $t3, 8($sp)      # Salvo il registo $t3 nello stack in quanto poi viene sovrascritto
+    ls $t4, 12($sp)     # Salvo il registo $t4 nello stack in quanto poi viene sovrascritto
+
     li $t1, 60          # Imposta il contatore a 60 (numero di secondi)
     li $t4, 2           # Imposta il secondo contatore a 2 (numero di secondi)
 
 led_loop:
-    sw $zero, 0($t0)    # Scrive il valore 0 nella cella LED (led spento)
+    sw $zero, 0($v0)    # Scrive il valore 0 nella cella LED (led spento)
     move $t3, $zero     # Imposta il registro $t3 a 0
     sw $ra, 4($sp)
     jal delay           # Chiamata alla funzione delay per un ritardo di 2 secondi
 
     li $t3, 0x8000      # Imposta il valore 0x8000 nel registro $t3 (led acceso)
-    sw $t3, 0($t0)      # Scrive il valore 0x8000 nella cella LED (led acceso)
+    sw $t3, 0($v0)      # Scrive il valore 0x8000 nella cella LED (led acceso)
     jal delay           # Chiamata alla funzione delay per un ritardo di 2 secondi
 
     addi $t1, $t1, -2   # Sottrae 2 dal contatore dei secondi rimanenti
@@ -165,5 +172,10 @@ delay_loop:
 
 
 end_loop:
-    lw $ra, 4($sp)
+    lw $ra, 0($sp)      # Ripristino i registri precedentemente salvati nello stack
+    lw $t1, 4($sp)      #
+    lw $t3, 8($sp)      #
+    lw $t4, 12($sp)     #
+    addi $sp, $sp, 12   # Dealloco lo spazio allocato nello stack
+
     jr $ra               # Ritorna alla chiamata della funzione
