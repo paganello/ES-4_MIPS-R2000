@@ -165,7 +165,7 @@ errore:
 
 # Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
     li $t5, 60                  # Imposta il contatore a 60 (numero di secondi) t1
-    li $t6, 2                   # Imposta il secondo contatore a 2 (numero di secondi) t4
+    li $a0, -2                   # Imposta il secondo contatore a 2 (numero di secondi) t4
 
 # lampeggio led
 led_loop:
@@ -176,8 +176,8 @@ led_loop:
     sw $t3, 0($v0)              # Scrive il valore 0x8000 nella cella LED (led acceso)
     jal delay_loop              # Chiamata alla funzione delay per un ritardo di 2 secondi
 
-    addi $t5, $t5, -2           # Sottrae 2 dal contatore dei secondi rimanenti
-    beq $t5, $zero, end    # Salta al ciclo del led se il contatore non è zero
+    add $t5, $t5, $a0           # Sottrae 2 dal contatore dei secondi rimanenti
+    beq $t5, $zero, end         # Salta al ciclo del led se il contatore non è zero
     j led_loop                  # ritonro a led loop e ricomincio il ciclo di lampeggio
 
 
@@ -189,5 +189,13 @@ delay_loop:
 
 
 end:
-    
+    li $t7, 0x0                 # Carico 0x00000000 in t7    
+    move $t0, $t7               # Azzero t0
+    move $t1, $t7               # Azzero t1
+    move $t2, $t7               # Azzero t2
+    move $t3, $t7               # Azzero t3
+    move $t4, $t7               # Azzero t4
+    move $t5, $t7               # Azzero t5
+    j ver_command               # Ritorno alla verifica di command
+
 
