@@ -1,7 +1,7 @@
 .data   0x10000000              # Inizializzazione .data a 0x10000000
-START:     .word   0x00         # Inizializzazione START a 0x10000004
-LED:       .half   0x00         # Inizializzazione LED a 0x10000006
-COMMAND:   .byte   0x00         # Inizializzazione COMMAND  0x10000007
+START:     .word   0x00000000   # Inizializzazione START a 0x10000004
+LED:       .half   0x00000000   # Inizializzazione LED a 0x10000006
+COMMAND:   .byte   0x00000000   # Inizializzazione COMMAND  0x10000007
 
 
 
@@ -189,7 +189,7 @@ delay_loop:
 
 
 end:
-    li $t7, 0x0                 # Carico 0x00000000 in t7    
+    li $t7, 0x00000000          # Carico 0x00000000 in t7    
     move $t0, $t7               # Azzero t0
     move $t1, $t7               # Azzero t1
     move $t2, $t7               # Azzero t2
