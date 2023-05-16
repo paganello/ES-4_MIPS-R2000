@@ -4,21 +4,20 @@ LED:       .half   0x00000000   # Inizializzazione LED a 0x10000006
 COMMAND:   .byte   0x00000000   # Inizializzazione COMMAND  0x10000007
 
 
-
 #Inizializzazione ROUTINE_TABLE
 
 ROUTINE_TABLE:   .word  0x10000008     # {da chiedere a abbadini se gli indirizzamenti vanno bene}
 
-routine0_adress:    .word   0x1000000C
-routine1_adress:    .word   0x10000010
-routine2_adress:    .word   0x10000014
-routine3_adress:    .word   0x10000018
-routine4_adress:    .word   0x1000001C
-routine5_adress:    .word   0x10000020
-routine6_adress:    .word   0x10000024
-routine7_adress:    .word   0x10000028
-routine8_adress:    .word   0x1000002C
-routine9_adress:    .word   0x10000030
+routine0_adress:    .word    0x1000000C
+routine1_adress:    .word    0x10000010
+routine2_adress:    .word    0x10000014
+routine3_adress:    .word    0x10000018
+routine4_adress:    .word    0x1000001C
+routine5_adress:    .word    0x10000020
+routine6_adress:    .word    0x10000024
+routine7_adress:    .word    0x10000028
+routine8_adress:    .word    0x1000002C
+routine9_adress:    .word    0x10000030
 routine10_adress:    .word   0x10000034
 routine11_adress:    .word   0x10000038
 routine12_adress:    .word   0x1000003C
@@ -113,6 +112,7 @@ routine15_adress:
 main: 
     la $v0, LED                             # Inserisce in v0 l'indirizzo di LED
     
+
 # Verifica del contenuto di COMMAND che sia diverso da zero
     
 ver_command:  
@@ -120,6 +120,7 @@ ver_command:
     andi $t1, $t1, 0x000000ff               # Moltiplica il contenuto di t1 con 0x000000ff, essendo che COMMAND è a 8 bit e un regitro è a 32 bit
     bne $t1, $zero, send_1000H_to_CPU       # Verifica che il contenuto di t1 sia diverso da zero, se è true, va in "send_1000H_to_CPU"
     j ver_command                           # salta a send_1000H_to_CPU
+
 
 # Invia la parola 1000H nella cella a 16 bit denominata START
 
@@ -158,35 +159,42 @@ controllo_start:
     j end
     # termina il programma {da chiedere all'ingegnere abbadini}
 
+
 # Allocazione spazio dello stack delle chiamate
 
 errore:
-    move $t3, $zero             # Imposta il registro $t3 a 0
+    move $t3, $zero                 # Imposta il registro $t3 a 0
+
 
 # Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
-    li $t5, 60                  # Imposta il contatore a 60 (numero di secondi) t1
-    li $a0, -2                   # Imposta il secondo contatore a 2 (numero di secondi) t4
+
+li $t5, 60                      # Imposta il contatore a 60 (numero di secondi) t1
+    li $a0, -2                      # Imposta il secondo contatore a 2 (numero di secondi) t4
+
 
 # lampeggio led
+
 led_loop:
-    sw $zero, 0($v0)            # Scrive il valore 0 nella cella LED (led spento)
-    jal delay_loop              # Chiamata alla funzione delay per un ritardo di 2 secondi
+    sw $zero, 0($v0)                # Scrive il valore 0 nella cella LED (led spento)
+    jal delay_loop                  # Chiamata alla funzione delay per un ritardo di 2 secondi
 
-    li $t3, 0x00001F40          # Imposta il valore 0x8000 nel registro $t3 (led acceso) {da chiedere a abbadini il valore da settare => esadecimale o decimale o testo?}
-    sw $t3, 0($v0)              # Scrive il valore 0x8000 nella cella LED (led acceso)
-    jal delay_loop              # Chiamata alla funzione delay per un ritardo di 2 secondi
+    li $t3, 0x00001F40              # Imposta il valore 0x8000 nel registro $t3 (led acceso) {da chiedere a abbadini il valore da settare => esadecimale o decimale o testo?}
+    sw $t3, 0($v0)                  # Scrive il valore 0x8000 nella cella LED (led acceso)
+    jal delay_loop                  # Chiamata alla funzione delay per un ritardo di 2 secondi
 
-    add $t5, $t5, $a0           # Sottrae 2 dal contatore dei secondi rimanenti
-    beq $t5, $zero, end         # Salta al ciclo del led se il contatore non è zero
-    j led_loop                  # ritonro a led loop e ricomincio il ciclo di lampeggio
+    add $t5, $t5, $a0               # Sottrae 2 dal contatore dei secondi rimanenti
+    beq $t5, $zero, end             # Salta al ciclo del led se il contatore non è zero
+    j led_loop                      # ritorno a led loop e ricomincio il ciclo di lampeggio
 
 
 # Gestione contatore con contatore a 60 secondi
+
 delay_loop:
     addi $t4, $t4, -400         # Decrementa il contatore del ritardo di (1/500000000)*2 secondi, espresso in microsecondi
     bnez $t4, delay_loop        # Ripeti il ciclo finché il contatore non è zero
     jr $ra
 
+# Fine programma
 
 end:
     li $t7, 0x00000000          # Carico 0x00000000 in t7    
