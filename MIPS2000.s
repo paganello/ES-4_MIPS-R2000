@@ -8,22 +8,22 @@ COMMAND:   .byte   0x00000000   # Inizializzazione COMMAND  0x10000007
 
 ROUTINE_TABLE:   .word  0x10000008     # {da chiedere a abbadini se gli indirizzamenti vanno bene}
 
-routine0_adress:    .word    0x1000000C
-routine1_adress:    .word    0x10000010
-routine2_adress:    .word    0x10000014
-routine3_adress:    .word    0x10000018
-routine4_adress:    .word    0x1000001C
-routine5_adress:    .word    0x10000020
-routine6_adress:    .word    0x10000024
-routine7_adress:    .word    0x10000028
-routine8_adress:    .word    0x1000002C
-routine9_adress:    .word    0x10000030
-routine10_adress:    .word   0x10000034
-routine11_adress:    .word   0x10000038
-routine12_adress:    .word   0x1000003C
-routine13_adress:    .word   0x10000040
-routine14_adress:    .word   0x10000044
-routine15_adress:    .word   0x10000048
+routine0_adress:     .word    0x1000000C
+routine1_adress:     .word    0x10000010
+routine2_adress:     .word    0x10000014
+routine3_adress:     .word    0x10000018
+routine4_adress:     .word    0x1000001C
+routine5_adress:     .word    0x10000020
+routine6_adress:     .word    0x10000024
+routine7_adress:     .word    0x10000028
+routine8_adress:     .word    0x1000002C
+routine9_adress:     .word    0x10000030
+routine10_adress:    .word    0x10000034
+routine11_adress:    .word    0x10000038
+routine12_adress:    .word    0x1000003C
+routine13_adress:    .word    0x10000040
+routine14_adress:    .word    0x10000044
+routine15_adress:    .word    0x10000048
 
 .text
 
