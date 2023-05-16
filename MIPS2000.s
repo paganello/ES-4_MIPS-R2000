@@ -154,7 +154,7 @@ controllo_start:
     bne $t1, $t3, errore
 
     sll $t2, $t2, 4                     # Shift a sinistra il nybble più significativo per 16 per ottenere l'offset
-    lui $t4, ROUTINE_TABLE              # Carica l'indirizzo della Routine_Table nel registro t7
+    la $t4, ROUTINE_TABLE              # Carica l'indirizzo della Routine_Table nel registro t7
     add $t4, $t4, $t2                   # Aggiunge a t7 il nybble più significativo per calcolare l'indirizzo della routine richiesta
     jr $t4                              # Salta all'indirizzo della routine richiesta
 
