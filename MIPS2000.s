@@ -1,17 +1,18 @@
 .data   0x10000000              # Inizializzazione .data a 0x10000000
-COMMAND:   .byte   0x00         # Inizializzazione COMMAND
-START:     .word   0x00         # Inizializzazione START
-LED:       .half   0x00         # Inizializzazione LED
+START:     .word   0x00         # Inizializzazione START a 0x10000004
+LED:       .half   0x00         # Inizializzazione LED a 0x10000006
+COMMAND:   .byte   0x00         # Inizializzazione COMMAND  0x10000007
+
 
 
 #Inizializzazione ROUTINE_TABLE
 
 ROUTINE_TABLE:  #bisogna capire come inizializzare Routine table
 
-    .word   routine0_adress
-    .word   routine1_adress  
-    .word   routine2_adress
-    .word   routine3_adress
+    .word   0x10000008
+    .word   0x10000000C
+    .word   0x100000010
+    .word   0x100000010
     .word   routine4_adress
     .word   routine5_adress
     .word   routine6_adress
@@ -23,7 +24,7 @@ ROUTINE_TABLE:  #bisogna capire come inizializzare Routine table
     .word   routine12_adress
     .word   routine13_adress
     .word   routine14_adress
-    .word   routine15_adress    
+    .word   routine15_adress   
 
 
 .text
