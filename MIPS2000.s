@@ -7,31 +7,26 @@ COMMAND:   .byte   0x00         # Inizializzazione COMMAND  0x10000007
 
 #Inizializzazione ROUTINE_TABLE
 
-ROUTINE_TABLE:  #bisogna capire come inizializzare Routine table
+ROUTINE_TABLE:   .word  0x10000008     #bisogna capire come inizializzare Routine table
 
-    .word   0x10000008
-    .word   0x10000000C
-    .word   0x100000010
-    .word   0x100000010
-    .word   routine4_adress
-    .word   routine5_adress
-    .word   routine6_adress
-    .word   routine7_adress
-    .word   routine8_adress
-    .word   routine9_adress
-    .word   routine10_adress
-    .word   routine11_adress
-    .word   routine12_adress
-    .word   routine13_adress
-    .word   routine14_adress
-    .word   routine15_adress   
-
+routine0_adress:    .word   0x1000000C
+routine1_adress:    .word   0x10000010
+routine2_adress:    .word   0x10000014
+routine3_adress:    .word   0x10000018
+routine4_adress:    .word   0x1000001C
+routine5_adress:    .word   0x10000020
+routine6_adress:    .word   0x10000024
+routine7_adress:    .word   0x10000028
+routine8_adress:    .word   0x1000002C
+routine9_adress:    .word   0x10000030
+routine10_adress:    .word   0x10000034
+routine11_adress:    .word   0x10000038
+routine12_adress:    .word   0x1000003C
+routine13_adress:    .word   0x10000040
+routine14_adress:    .word   0x10000044
+routine15_adress:    .word   0x10000048
 
 .text
-
-#Attesa di due secondi
-
-li $t0, 15000000000                     # Mette in t0 2 secondi di attesa (contatore)
 
 routine0_adress:
     addi $t0, $t0, -1                   # Decrementa il contatore di 1
@@ -113,7 +108,6 @@ routine15_adress:
     bne $t0, $zero, routine15_adress
     jr $ra
 
-
 #Core del programma
 
 main: 
@@ -145,6 +139,8 @@ controllo_start:
 
     add $t2, $zero, $zero               # Azzera t2 
     add $t1, $zero, $zero               # Azzera t1
+    add $t0, $zero, $zero               # Azzera t0
+    li $t0, 15000000000                 # Carico in t0 il valore che serve per l'attesa nelle routine (t0 viene usato nelle routine ma lo inizializzo prima)
 
     lb $t1, 0(COMMAND)                  # Esempio: 1110 0001  
     andi $t1, $t1, 0x000000FF           # Moltiplica il contenuto di t1 con 0x000000FF, essendo che COMMAND è a 8 bit e un regitro è a 32 bit
@@ -155,57 +151,43 @@ controllo_start:
     bne $t1, $t3, errore
 
     sll $t2, $t2, 4                     # Shift a sinistra il nybble più significativo per 16 per ottenere l'offset
-    la $t4, ROUTINE_TABLE              # Carica l'indirizzo della Routine_Table nel registro t7
+    la $t4, ROUTINE_TABLE               # Carica l'indirizzo della Routine_Table nel registro t7
     add $t4, $t4, $t2                   # Aggiunge a t7 il nybble più significativo per calcolare l'indirizzo della routine richiesta
-    jr $t4                              # Salta all'indirizzo della routine richiesta
+    jal $t4                             # Salta all'indirizzo della routine richiesta
 
+    j end
+    # termina il programma {da chiedere all'ingegnere abbadini}
 
 # Allocazione spazio dello stack delle chiamate
 
 errore:
-    addi $sp, $sp, -12          # Alloca spazio nello stack (4 word)
-    ls $ra, 0($sp)              # Salva il registo $ra nello stack in quanto poi viene sovrascritto
-    ls $t1, 4($sp)              # Salva il registo $t1 nello stack in quanto poi viene sovrascritto
-    ls $t3, 8($sp)              # Salva il registo $t3 nello stack in quanto poi viene sovrascritto
-    ls $t4, 12($sp)             # Salva il registo $t4 nello stack in quanto poi viene sovrascritto
+    move $t3, $zero             # Imposta il registro $t3 a 0
 
 # Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
-
-    li $t1, 60                  # Imposta il contatore a 60 (numero di secondi)
-    li $t4, 2                   # Imposta il secondo contatore a 2 (numero di secondi)
-
+    li $t5, 60                  # Imposta il contatore a 60 (numero di secondi) t1
+    li $t6, 2                   # Imposta il secondo contatore a 2 (numero di secondi) t4
 
 # lampeggio led
-
 led_loop:
     sw $zero, 0($v0)            # Scrive il valore 0 nella cella LED (led spento)
-    move $t3, $zero             # Imposta il registro $t3 a 0
-    sw $ra, 4($sp)
-    jal delay                   # Chiamata alla funzione delay per un ritardo di 2 secondi
+    jal delay_loop              # Chiamata alla funzione delay per un ritardo di 2 secondi
 
-    li $t3, 0x8000              # Imposta il valore 0x8000 nel registro $t3 (led acceso)
+    li $t3, 0x00001F40          # Imposta il valore 0x8000 nel registro $t3 (led acceso) {da chiedere a abbadini il valore da settare => esadecimale o decimale o testo?}
     sw $t3, 0($v0)              # Scrive il valore 0x8000 nella cella LED (led acceso)
-    jal delay                   # Chiamata alla funzione delay per un ritardo di 2 secondi
+    jal delay_loop              # Chiamata alla funzione delay per un ritardo di 2 secondi
 
-    addi $t1, $t1, -2           # Sottrae 2 dal contatore dei secondi rimanenti
-    beq $t1, $zero, end_loop    # Salta al ciclo del led se il contatore non è zero
-    jal delay_loop
+    addi $t5, $t5, -2           # Sottrae 2 dal contatore dei secondi rimanenti
+    beq $t5, $zero, end    # Salta al ciclo del led se il contatore non è zero
+    j led_loop                  # ritonro a led loop e ricomincio il ciclo di lampeggio
 
 
 # Gestione contatore con contatore a 60 secondi
-
 delay_loop:
     addi $t4, $t4, -400         # Decrementa il contatore del ritardo di (1/500000000)*2 secondi, espresso in microsecondi
     bnez $t4, delay_loop        # Ripeti il ciclo finché il contatore non è zero
+    jr $ra
 
 
-# Dealloca spazio dello stack delle chiamate
+end:
+    
 
-end_loop:
-    lw $ra, 0($sp)              # Ripristina i registri precedentemente salvati nello stack
-    lw $t1, 4($sp)              # Ripristina i registri precedentemente salvati nello stack
-    lw $t3, 8($sp)              # Ripristina i registri precedentemente salvati nello stack
-    lw $t4, 12($sp)             # Ripristina i registri precedentemente salvati nello stack
-    addi $sp, $sp, 12           # Dealloca lo spazio allocato nello stack
-
-    jr $ra                      # Ritorna alla chiamata della funzione
