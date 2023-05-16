@@ -7,7 +7,7 @@ COMMAND:   .byte   0x00000000   # Inizializzazione COMMAND  0x10000007
 
 #Inizializzazione ROUTINE_TABLE
 
-ROUTINE_TABLE:   .word  0x10000008     #bisogna capire come inizializzare Routine table
+ROUTINE_TABLE:   .word  0x10000008     # {da chiedere a abbadini se gli indirizzamenti vanno bene}
 
 routine0_adress:    .word   0x1000000C
 routine1_adress:    .word   0x10000010
