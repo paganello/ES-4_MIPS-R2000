@@ -187,7 +187,7 @@ led_loop:
     j led_loop                      # ritorno a led loop e ricomincio il ciclo di lampeggio
 
 
-# Gestione contatore con contatore a 60 secondi
+# Gestione contatore per il lampeggio
 
 delay_loop:
     addi $t4, $t4, -400         # Decrementa il contatore del ritardo di (1/500000000)*2 secondi, espresso in microsecondi
