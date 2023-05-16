@@ -168,7 +168,7 @@ errore:
 
 # Il comando non è corretto, inibisce l'accettazione di dati per 60 secondi 
 
-li $t5, 60                      # Imposta il contatore a 60 (numero di secondi) t1
+    li $t5, 60                      # Imposta il contatore a 60 (numero di secondi) t1
     li $a0, -2                      # Imposta il secondo contatore a 2 (numero di secondi) t4
 
 
