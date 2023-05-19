@@ -8,22 +8,22 @@ COMMAND:   .byte   0x00000000   # Inizializzazione COMMAND  0x10000007
 
 ROUTINE_TABLE:   .word  0x10000008     # {da chiedere a abbadini se gli indirizzamenti vanno bene}
 
-routine0_adress:     .word    0x1000000C
-routine1_adress:     .word    0x10000010
-routine2_adress:     .word    0x10000014
-routine3_adress:     .word    0x10000018
-routine4_adress:     .word    0x1000001C
-routine5_adress:     .word    0x10000020
-routine6_adress:     .word    0x10000024
-routine7_adress:     .word    0x10000028
-routine8_adress:     .word    0x1000002C
-routine9_adress:     .word    0x10000030
-routine10_adress:    .word    0x10000034
-routine11_adress:    .word    0x10000038
-routine12_adress:    .word    0x1000003C
-routine13_adress:    .word    0x10000040
-routine14_adress:    .word    0x10000044
-routine15_adress:    .word    0x10000048
+routine0Address:     .word    0x1000000C
+routine1Address:     .word    0x10000010
+routine2Address:     .word    0x10000014
+routine3Address:     .word    0x10000018
+routine4Address:     .word    0x1000001C
+routine5Address:     .word    0x10000020
+routine6Address:     .word    0x10000024
+routine7Address:     .word    0x10000028
+routine8Address:     .word    0x1000002C
+routine9Address:     .word    0x10000030
+routine10Address:    .word    0x10000034
+routine11Address:    .word    0x10000038
+routine12Address:    .word    0x1000003C
+routine13Address:    .word    0x10000040
+routine14Address:    .word    0x10000044
+routine15Address:    .word    0x10000048
 
 .text
 
@@ -116,7 +116,8 @@ main:
 # Verifica del contenuto di COMMAND che sia diverso da zero
     
 ver_command:  
-    lb  $t1, 0(COMMAND)                     # Inserisce in t1 il contenuto di COMMAND
+    la $t1, COMMAND
+    lb  $t1, 0($t1)                     # Inserisce in t1 il contenuto di COMMAND
     andi $t1, $t1, 0x000000ff               # Moltiplica il contenuto di t1 con 0x000000ff, essendo che COMMAND è a 8 bit e un regitro è a 32 bit
     bne $t1, $zero, send_1000H_to_CPU       # Verifica che il contenuto di t1 sia diverso da zero, se è true, va in "send_1000H_to_CPU"
     j ver_command                           # salta a send_1000H_to_CPU
