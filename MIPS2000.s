@@ -2,7 +2,7 @@
 
 START:     .word   0x00000000   # Inizializzazione START a 0x10010004
 LED:       .half   0x0000       # Inizializzazione LED a 0x10010006
-COMMAND:   .byte   0x01         # Inizializzazione COMMAND  0x10010007
+COMMAND:   .byte   0xE1         # Inizializzazione COMMAND  0x10010007
 
 .text
 
@@ -51,10 +51,17 @@ controllo_start:
     xor	$t3, $t3, $t2                   # --> 1110 0001 , mi permette di fare il complemento bit a bit.
     bne $t1, $t3, errore
 
-    sll $t2, $t2, 2                     # Moltiplica il nybble più significativo per 4 per ottenere l'offset
-    la $t4, routine0Address             # Carica l'indirizzo della Routine_Table nel registro t4
-    addu $t4, $t4, $t2                  # Aggiunge a t4 il nybble più significativo per calcolare l'indirizzo della routine richiesta
-    jal $t4                             # Salta all'indirizzo della routine richiesta
+    # Dato che quello che ha scritto bonse era una cacata pazzasca, l'ho rifatto:
+    
+    #sll $t2, $t2, 2                    # Moltiplica il nybble più significativo per 4 per ottenere l'offset
+    #la $t4, routine0Address            # Carica l'indirizzo della Routine_Table nel registro t4
+    srl $t2, $t2, 4                     # Shilto a desta di 4 posizioni => 1110 0000 --> 0000 1110
+    andi $t3, $t2, 0x0000000C           # Moltiplico per 12(numero di byte che separa una label routine dall'altra) => ogni istruzione sono 1 word = 4 byte, devo saltare 3 istruzioni => 4*3 = 12 byte
+                                        # Dato che il salto tra una routine e l'altra e' fisso, e dato che ogni comendo corrisponde a una routine,  moltiplico per 12 il comando.
+    la $t4, routine0Address
+    add $t3, $t3, $t4           # Ci sommo il valore della cella corrispondente alla prima label
+    #addu $t4, $t4, $t2                 # Aggiunge a t4 il nybble più significativo per calcolare l'indirizzo della routine richiesta
+    jal $t3                             # Salta all'indirizzo della routine richiesta
 
     j end
     # termina il programma {da chiedere all'ingegnere abbadini}
