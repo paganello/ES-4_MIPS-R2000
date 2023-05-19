@@ -1,121 +1,16 @@
 .data   0x10010000              # Inizializzazione .data a 0x10010000
+
 START:     .word   0x00000000   # Inizializzazione START a 0x10010004
 LED:       .half   0x0000       # Inizializzazione LED a 0x10010006
-COMMAND:   .byte   0x00         # Inizializzazione COMMAND  0x10010007
-pieroPelu: .byte   0x00
-
-
-#Inizializzazione ROUTINE_TABLE
-
-ROUTINETABLE:       .word     0x00000000     # 0x10010008
-
-routine0Address:     .word    0x00000000    # 0x1001000C
-routine1Address:     .word    0x00000000    # 0x10010010
-routine2Address:     .word    0x00000000    # 0x10010014
-routine3Address:     .word    0x00000000    # 0x10010018
-routine4Address:     .word    0x00000000    # 0x1001001C
-routine5Address:     .word    0x00000000    # 0x10010020
-routine6Address:     .word    0x00000000    # 0x10010024
-routine7Address:     .word    0x00000000    # 0x10010028
-routine8Address:     .word    0x00000000    # 0x1001002C
-routine9Address:     .word    0x00000000    # 0x10010030
-routine10Address:    .word    0x00000000    # 0x10010034
-routine11Address:    .word    0x00000000    # 0x10010038
-routine12Address:    .word    0x00000000    # 0x1001003C
-routine13Address:    .word    0x00000000    # 0x10010040
-routine14Address:    .word    0x00000000    # 0x10010044
-routine15Address:    .word    0x00000000    # 0x10010048
+COMMAND:   .byte   0x01         # Inizializzazione COMMAND  0x10010007
 
 .text
-
-routine0Address:
-    addi $t0, $t0, -1                   # Decrementa il contatore di 1
-    bne $t0, $zero, routine0_adress     # Verifica che il contatore non sia uguale a 0 e continua il loop
-    jr $ra
-
-routine1Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine1_adress
-    jr $ra
-    
-routine2Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine2_adress
-    jr $ra
-    
-routine3Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine3_adress
-    jr $ra
-    
-routine4Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine4_adress
-    jr $ra
-    
-routine5Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine5_adress
-    jr $ra
-    
-routine6Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine6_adress
-    jr $ra
-    
-routine7Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine7_adress
-    jr $ra
-    
-routine8Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine8_adress
-    jr $ra
-    
-routine9Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine9_adress
-    jr $ra
-    
-routine10Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine10_adress
-    jr $ra
-    
-routine11Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine11_adress
-    jr $ra
-    
-routine12Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine12_adress
-    jr $ra
-    
-routine13Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine13_adress
-    jr $ra
-    
-routine14Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine14_adress
-    jr $ra
-    
-routine15Address:
-    addi $t0, $t0, -1
-    bne $t0, $zero, routine15_adress
-    jr $ra
-
-#Core del programma
 
 main: 
     la $v0, LED                             # Inserisce in v0 l'indirizzo di LED
     
 
 # Verifica del contenuto di COMMAND che sia diverso da zero
-    
 ver_command:  
     la $t1, COMMAND
     lb  $t1, 0($t1)                     # Inserisce in t1 il contenuto di COMMAND
@@ -128,9 +23,9 @@ ver_command:
 
 send_1000H_to_CPU:
     addi $t0, $zero,  0x1000              # Inserisce in t0 la parola 1000H in esadecimale
-    la $t0, START 
-    sw $t0, 0($t0)                        # Memorizza in START il contenuto di t0
-    j controllo_start                       # salta a controllo_start
+    la $t1, START 
+    sw $t0, 0($t1)                        # Memorizza in START il contenuto di t0
+    j controllo_start                      # salta a controllo_start
 
 
 # Verifica del contenuto di start che corrisponda alla parola 1000H
@@ -138,9 +33,9 @@ send_1000H_to_CPU:
 
 controllo_start:
     la  $t0, START 
-    lw	$t0, 0($t0)  		            # Inserisce in t0 il contenuto di START
+    lw	$t1, 0($t0)  		            # Inserisce in t0 il contenuto di START
     addi $t2, $zero, 0x1000             # Inserisce il t2 il risultato della somma tra 0 e 1000H in esadecimale
-    bne $t0, $t2, controllo_start       # Verifica che se il contenuto di t0 corrisponde al contenuto di t2, allora continua con l'istruzione successiva
+    bne $t1, $t2, controllo_start       # Verifica che se il contenuto di t0 corrisponde al contenuto di t2, allora continua con l'istruzione successiva
 
     add $t2, $zero, $zero               # Azzera t2 
     add $t1, $zero, $zero               # Azzera t1
@@ -157,7 +52,7 @@ controllo_start:
     bne $t1, $t3, errore
 
     sll $t2, $t2, 2                     # Moltiplica il nybble più significativo per 4 per ottenere l'offset
-    la $t4, ROUTINETABLE               # Carica l'indirizzo della Routine_Table nel registro t4
+    la $t4, routine0Address             # Carica l'indirizzo della Routine_Table nel registro t4
     addu $t4, $t4, $t2                  # Aggiunge a t4 il nybble più significativo per calcolare l'indirizzo della routine richiesta
     jal $t4                             # Salta all'indirizzo della routine richiesta
 
@@ -199,8 +94,91 @@ delay_loop:
     bnez $t4, delay_loop        # Ripeti il ciclo finché il contatore non è zero
     jr $ra
 
-# Fine programma
 
+
+# Routine
+routine0Address:
+    addi $t0, $t0, -1                   # Decrementa il contatore di 1
+    bne $t0, $zero, routine0Address     # Verifica che il contatore non sia uguale a 0 e continua il loop
+    jr $ra
+
+routine1Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine1Address
+    jr $ra
+    
+routine2Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine2Address
+    jr $ra
+    
+routine3Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine3Address
+    jr $ra
+    
+routine4Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine4Address
+    jr $ra
+    
+routine5Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine5Address
+    jr $ra
+    
+routine6Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine6Address
+    jr $ra
+    
+routine7Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine7Address
+    jr $ra
+    
+routine8Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine8Address
+    jr $ra
+    
+routine9Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine9Address
+    jr $ra
+    
+routine10Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine10Address
+    jr $ra
+    
+routine11Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine11Address
+    jr $ra
+    
+routine12Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine12Address
+    jr $ra
+    
+routine13Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine13Address
+    jr $ra
+    
+routine14Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine14Address
+    jr $ra
+    
+routine15Address:
+    addi $t0, $t0, -1
+    bne $t0, $zero, routine15Address
+    jr $ra
+
+
+# Fine Programma
 end:
     li $t7, 0x00000000          # Carico 0x00000000 in t7    
     move $t0, $t7               # Azzero t0
