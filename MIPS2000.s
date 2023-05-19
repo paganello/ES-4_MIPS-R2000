@@ -2,7 +2,7 @@
 
 START:     .word   0x00000000   # Inizializzazione START a 0x10010004
 LED:       .half   0x0000       # Inizializzazione LED a 0x10010006
-COMMAND:   .byte   0xE1         # Inizializzazione COMMAND  0x10010007
+COMMAND:   .byte   0xE2         # Inizializzazione COMMAND  0x10010007
 
 .text
 
@@ -46,20 +46,26 @@ controllo_start:
     lb $t1, 0($t1)                         # Esempio: 1110 0001  
     andi $t1, $t1, 0x000000FF           # Moltiplica il contenuto di t1 con 0x000000FF, essendo che COMMAND è a 8 bit e un regitro è a 32 bit
 
+
+    #Problema: la porta xor per qualsiasi combinazione tu metti da sempre il risultato uguale a t1, anche se il complemento a 1 non viene rispettato
+    #Soluzione: vado a recuperare il nybble piu sign., lo sposto a dx di 4, faccio inverso, contollo che sia uguale al bit meno sign.
     andi $t2, $t1, 0x000000F0           # Estraggo il nybble piu significativo  -->  1110 0000
     andi $t3, $t1, 0x0000000F           # Estraggo il nybble meno significativo -->  0000 0001
-    xor	$t3, $t3, $t2                   # --> 1110 0001 , mi permette di fare il complemento bit a bit.
-    bne $t1, $t3, errore
+    #xor	$t3, $t3, $t2               # --> 1110 0001 , mi permette di fare il complemento bit a bit.
+    srl $t2, $t2, 4                     # Shift dx di 4 pos.
+    not $t4, $t2 
+    andi $t4, $t4, 0x0000000f
+    bne $t4, $t3, errore
 
     # Dato che quello che ha scritto bonse era una cacata pazzasca, l'ho rifatto:
     
     #sll $t2, $t2, 2                    # Moltiplica il nybble più significativo per 4 per ottenere l'offset
     #la $t4, routine0Address            # Carica l'indirizzo della Routine_Table nel registro t4
-    srl $t2, $t2, 4                     # Shilto a desta di 4 posizioni => 1110 0000 --> 0000 1110
-    andi $t3, $t2, 0x0000000C           # Moltiplico per 12(numero di byte che separa una label routine dall'altra) => ogni istruzione sono 1 word = 4 byte, devo saltare 3 istruzioni => 4*3 = 12 byte
+    #shft dx t2 (fatto sopra)           # Shilto a desta di 4 posizioni => 1110 0000 --> 0000 1110
+    mul $t3, $t2, 0x0000000C            # Moltiplico per 12(numero di byte che separa una label routine dall'altra) => ogni istruzione sono 1 word = 4 byte, devo saltare 3 istruzioni => 4*3 = 12 byte
                                         # Dato che il salto tra una routine e l'altra e' fisso, e dato che ogni comendo corrisponde a una routine,  moltiplico per 12 il comando.
     la $t4, routine0Address
-    add $t3, $t3, $t4           # Ci sommo il valore della cella corrispondente alla prima label
+    add $t3, $t3, $t4                   # Ci sommo il valore della cella corrispondente alla prima label
     #addu $t4, $t4, $t2                 # Aggiunge a t4 il nybble più significativo per calcolare l'indirizzo della routine richiesta
     jal $t3                             # Salta all'indirizzo della routine richiesta
 
