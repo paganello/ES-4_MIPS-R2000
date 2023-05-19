@@ -1,108 +1,109 @@
-.data   0x10000000              # Inizializzazione .data a 0x10000000
-START:     .word   0x00000000   # Inizializzazione START a 0x10000004
-LED:       .half   0x00000000   # Inizializzazione LED a 0x10000006
-COMMAND:   .byte   0x00000000   # Inizializzazione COMMAND  0x10000007
+.data   0x10010000              # Inizializzazione .data a 0x10010000
+START:     .word   0x00000000   # Inizializzazione START a 0x10010004
+LED:       .half   0x0000       # Inizializzazione LED a 0x10010006
+COMMAND:   .byte   0x00         # Inizializzazione COMMAND  0x10010007
+pieroPelu: .byte   0x00
 
 
 #Inizializzazione ROUTINE_TABLE
 
-ROUTINE_TABLE:   .word  0x10000008     # {da chiedere a abbadini se gli indirizzamenti vanno bene}
+ROUTINETABLE:       .word     0x00000000     # 0x10010008
 
-routine0Address:     .word    0x1000000C
-routine1Address:     .word    0x10000010
-routine2Address:     .word    0x10000014
-routine3Address:     .word    0x10000018
-routine4Address:     .word    0x1000001C
-routine5Address:     .word    0x10000020
-routine6Address:     .word    0x10000024
-routine7Address:     .word    0x10000028
-routine8Address:     .word    0x1000002C
-routine9Address:     .word    0x10000030
-routine10Address:    .word    0x10000034
-routine11Address:    .word    0x10000038
-routine12Address:    .word    0x1000003C
-routine13Address:    .word    0x10000040
-routine14Address:    .word    0x10000044
-routine15Address:    .word    0x10000048
+routine0Address:     .word    0x00000000    # 0x1001000C
+routine1Address:     .word    0x00000000    # 0x10010010
+routine2Address:     .word    0x00000000    # 0x10010014
+routine3Address:     .word    0x00000000    # 0x10010018
+routine4Address:     .word    0x00000000    # 0x1001001C
+routine5Address:     .word    0x00000000    # 0x10010020
+routine6Address:     .word    0x00000000    # 0x10010024
+routine7Address:     .word    0x00000000    # 0x10010028
+routine8Address:     .word    0x00000000    # 0x1001002C
+routine9Address:     .word    0x00000000    # 0x10010030
+routine10Address:    .word    0x00000000    # 0x10010034
+routine11Address:    .word    0x00000000    # 0x10010038
+routine12Address:    .word    0x00000000    # 0x1001003C
+routine13Address:    .word    0x00000000    # 0x10010040
+routine14Address:    .word    0x00000000    # 0x10010044
+routine15Address:    .word    0x00000000    # 0x10010048
 
 .text
 
-routine0_adress:
+routine0Address:
     addi $t0, $t0, -1                   # Decrementa il contatore di 1
     bne $t0, $zero, routine0_adress     # Verifica che il contatore non sia uguale a 0 e continua il loop
     jr $ra
 
-routine1_adress:
+routine1Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine1_adress
     jr $ra
     
-routine2_adress:
+routine2Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine2_adress
     jr $ra
     
-routine3_adress:
+routine3Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine3_adress
     jr $ra
     
-routine4_adress:
+routine4Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine4_adress
     jr $ra
     
-routine5_adress:
+routine5Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine5_adress
     jr $ra
     
-routine6_adress:
+routine6Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine6_adress
     jr $ra
     
-routine7_adress:
+routine7Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine7_adress
     jr $ra
     
-routine8_adress:
+routine8Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine8_adress
     jr $ra
     
-routine9_adress:
+routine9Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine9_adress
     jr $ra
     
-routine10_adress:
+routine10Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine10_adress
     jr $ra
     
-routine11_adress:
+routine11Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine11_adress
     jr $ra
     
-routine12_adress:
+routine12Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine12_adress
     jr $ra
     
-routine13_adress:
+routine13Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine13_adress
     jr $ra
     
-routine14_adress:
+routine14Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine14_adress
     jr $ra
     
-routine15_adress:
+routine15Address:
     addi $t0, $t0, -1
     bne $t0, $zero, routine15_adress
     jr $ra
@@ -126,8 +127,9 @@ ver_command:
 # Invia la parola 1000H nella cella a 16 bit denominata START
 
 send_1000H_to_CPU:
-    addi $t0, $zero, 0x31303030480a         # Inserisce in t0 la parola 1000H in esadecimale
-    sw $t0, 0(START)                        # Memorizza in START il contenuto di t0
+    addi $t0, $zero,  0x1000              # Inserisce in t0 la parola 1000H in esadecimale
+    la $t0, START 
+    sw $t0, 0($t0)                        # Memorizza in START il contenuto di t0
     j controllo_start                       # salta a controllo_start
 
 
@@ -135,8 +137,9 @@ send_1000H_to_CPU:
 # Estrazione del comando COMMAND nei 2 nybble rispettivamente più significativi e meno significativi. Nel nybble meno significativi, effettuo il complemento bit a bit
 
 controllo_start:
-    lw	$t0, 0(START)		            # Inserisce in t0 il contenuto di START
-    addi $t2, $zero, 0x31303030480a     # Inserisce il t2 il risultato della somma tra 0 e 1000H in esadecimale
+    la  $t0, START 
+    lw	$t0, 0($t0)  		            # Inserisce in t0 il contenuto di START
+    addi $t2, $zero, 0x1000             # Inserisce il t2 il risultato della somma tra 0 e 1000H in esadecimale
     bne $t0, $t2, controllo_start       # Verifica che se il contenuto di t0 corrisponde al contenuto di t2, allora continua con l'istruzione successiva
 
     add $t2, $zero, $zero               # Azzera t2 
@@ -144,7 +147,8 @@ controllo_start:
     add $t0, $zero, $zero               # Azzera t0
     li $t0, 15000000000                 # Carico in t0 il valore che serve per l'attesa nelle routine (t0 viene usato nelle routine ma lo inizializzo prima)
 
-    lb $t1, 0(COMMAND)                  # Esempio: 1110 0001  
+    la $t1, COMMAND 
+    lb $t1, 0($t1)                         # Esempio: 1110 0001  
     andi $t1, $t1, 0x000000FF           # Moltiplica il contenuto di t1 con 0x000000FF, essendo che COMMAND è a 8 bit e un regitro è a 32 bit
 
     andi $t2, $t1, 0x000000F0           # Estraggo il nybble piu significativo  -->  1110 0000
@@ -153,7 +157,7 @@ controllo_start:
     bne $t1, $t3, errore
 
     sll $t2, $t2, 2                     # Moltiplica il nybble più significativo per 4 per ottenere l'offset
-    la $t4, ROUTINE_TABLE               # Carica l'indirizzo della Routine_Table nel registro t4
+    la $t4, ROUTINETABLE               # Carica l'indirizzo della Routine_Table nel registro t4
     addu $t4, $t4, $t2                  # Aggiunge a t4 il nybble più significativo per calcolare l'indirizzo della routine richiesta
     jal $t4                             # Salta all'indirizzo della routine richiesta
 
