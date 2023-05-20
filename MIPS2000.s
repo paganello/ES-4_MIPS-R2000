@@ -57,7 +57,7 @@ controllo:
     bne $t4, $t3, errore                # Verifica che il contenuto di t3 sia diverso da t4, se è true, salta all'etichetta errore, se no continua
 
     # Se va bene computo e salto alla cella della label con la relativa routine
-    mul $t3, $t2, 0x0000000C            # Trova l'offeset => Moltiplico per 12 (numero di byte che separa una label routine dall'altra) => ogni istruzione sono 1 word = 4 byte, devo saltare 3 istruzioni => 4 * 3 = 12 byte
+    mul $t3, $t2, 0x0000000C            # Trova l'offset => Moltiplico per 12 (numero di byte che separa una label routine dall'altra) => ogni istruzione sono 1 word = 4 byte, devo saltare 3 istruzioni => 4 * 3 = 12 byte
                                         # Dato che il salto tra una routine e l'altra e' fisso e ogni comando corrisponde ad una routine, moltiplico per 12 il comando.                         
     la $t4, routine0Address             # Carica in t4 l'indirizzo della cella di routine0Address (prima routine)
     addu $t3, $t3, $t4                  # Somma all'offest l'indirizzo della prima routine, le altre sono in fila dopo di essa a distanza di 12 byte l'una dall'altra
