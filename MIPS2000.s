@@ -34,7 +34,7 @@ send_1000H_to_CPU:
 controllo:
     # Verifico START
     la  $t0, START                      # Inserisce in t0 l'indirizzo della cella di START
-    lw	$t1, 0($t0)  		            # Inserisce in t1 il contenuto di START
+    lw	$t1, 0($t0)                     # Inserisce in t1 il contenuto di START
     addi $t2, $zero, 0x1000             # Inserisce in t2 la parola 1000He
     bne $t1, $t2, controllo             # Verifica che il contenuto di t0 corrisponda al contenuto di t2, se è true, continua con l'istruzione successiva se no ritorna all'inizio di (controllo_start)
 
