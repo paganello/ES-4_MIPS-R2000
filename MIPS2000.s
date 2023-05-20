@@ -2,7 +2,7 @@
 
 START:     .word   0x00000000   # Inizializzazione START a 0x10010000
 LED:       .half   0x0000       # Inizializzazione LED a 0x10010004
-COMMAND:   .byte   0xe1         # Inizializzazione COMMAND  0x10010006
+COMMAND:   .byte   0x00         # Inizializzazione COMMAND  0x10010006
 
 .text
 
