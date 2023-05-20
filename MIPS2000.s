@@ -14,7 +14,7 @@ main:
 ver_command:  
     la $t1, COMMAND                         # Inserisce in t1 l'indirizzo della cella di COMMAND
     lb  $t1, 0($t1)                         # Inserisce in t1 il contenuto di COMMAND
-    andi $t1, $t1, 0x000000ff               # Moltiplica il contenuto di t1 con 0x000000ff, essendo che COMMAND è a 8 bit e un regitro è a 32 bit
+    andi $t1, $t1, 0x000000ff               # Moltiplica il contenuto di t1 con 0x000000ff, essendo che COMMAND è a 8 bit e un registro è a 32 bit
     bne $t1, $zero, send_1000H_to_CPU       # Verifica che il contenuto di t1 sia diverso da zero, se è true, va in "send_1000H_to_CPU"
     j ver_command                           # ripete ver_command visto che t1 è uguale a 0 e quindi COMMAND è uguale a 0
 
@@ -36,31 +36,31 @@ controllo:
     la  $t0, START                      # Inserisce in t0 l'indirizzo della cella di START
     lw	$t1, 0($t0)  		            # Inserisce in t1 il contenuto di START
     addi $t2, $zero, 0x1000             # Inserisce in t2 la parola 1000He
-    bne $t1, $t2, controllo             # Verifica che il contenuto di t0 corrisponda al contenuto di t2, se è true, continua con l'istruzione successiva se no ritorna all'inizio di "controllo_start)
+    bne $t1, $t2, controllo             # Verifica che il contenuto di t0 corrisponda al contenuto di t2, se è true, continua con l'istruzione successiva se no ritorna all'inizio di (controllo_start)
 
     # Azzero i registri
     add $t2, $zero, $zero               # Azzera t2 
     add $t1, $zero, $zero               # Azzera t1
     add $t0, $zero, $zero               # Azzera t0
-    addu $t0, $zero, 0xEE6B2800         # Carico in t0 il valore che serve per l'attesa nelle routine (t0 viene usato nelle routine ma lo inizializzo prima)
+    addu $t0, $zero, 0xEE6B2800         # Carica in t0 il valore che serve per l'attesa nelle routine (t0 viene usato nelle routine ma lo inizializzo prima)
 
     la $t1, COMMAND                     # Inserisce in t1 l'indirizzo della cella di COMMAND
     lb $t1, 0($t1)                      # Inserisce in t1 il di COMMAND  --> Esempio: 1110 0001                 
-    andi $t1, $t1, 0x000000FF           # Moltiplica il contenuto di t1 con 0x000000FF, essendo che COMMAND è a 8 bit e un regitro è a 32 bit => azzero tutti i bit tranne quelli che mi servono
-    andi $t2, $t1, 0x000000F0           # Estraggo il nybble piu significativo  -->  1110 0000 => azzero tutti i bit tranne quelli che mi servono
-    andi $t3, $t1, 0x0000000F           # Estraggo il nybble meno significativo -->  0000 0001 => azzero tutti i bit tranne quelli che mi servono
+    andi $t1, $t1, 0x000000FF           # Moltiplica il contenuto di t1 con 0x000000FF, essendo che COMMAND è a 8 bit e un registro è a 32 bit => azzero tutti i bit tranne quelli che mi servono
+    andi $t2, $t1, 0x000000F0           # Estrae il nybble piu significativo  -->  1110 0000 => azzero tutti i bit tranne quelli che mi servono
+    andi $t3, $t1, 0x0000000F           # Estrae il nybble meno significativo -->  0000 0001 => azzero tutti i bit tranne quelli che mi servono
     
     # Verifica la correttezza di COMMAND
     srl $t2, $t2, 4                     # Shift a destra il nybble più significativo di 4 posizioni  -->  0000 1110
     not $t4, $t2                        # Nega il nybble più significativo facendo il complemento bit a bit  -->  1111 0001
-    andi $t4, $t4, 0x0000000f           # Estraggo il complemento bit a bit -->  0000 0001
-    bne $t4, $t3, errore                #Verifica che il contenuto di t3 sia diverso da t4, se è true, salta all'etichetta errore, se no continua
+    andi $t4, $t4, 0x0000000f           # Estrae il complemento bit a bit -->  0000 0001
+    bne $t4, $t3, errore                # Verifica che il contenuto di t3 sia diverso da t4, se è true, salta all'etichetta errore, se no continua
 
     # Se va bene computo e salto alla cella della label con la relativa routine
-    mul $t3, $t2, 0x0000000C            # Trovo l'offeset => Moltiplico per 12 (numero di byte che separa una label routine dall'altra) => ogni istruzione sono 1 word = 4 byte, devo saltare 3 istruzioni => 4 * 3 = 12 byte
+    mul $t3, $t2, 0x0000000C            # Trova l'offeset => Moltiplico per 12 (numero di byte che separa una label routine dall'altra) => ogni istruzione sono 1 word = 4 byte, devo saltare 3 istruzioni => 4 * 3 = 12 byte
                                         # Dato che il salto tra una routine e l'altra e' fisso e ogni comando corrisponde ad una routine, moltiplico per 12 il comando.                         
-    la $t4, routine0Address             # Carico in t4 l'indirizzo della cella di routine0Address (prima routine)
-    addu $t3, $t3, $t4                  # Sommo all'offest l'indirizzo della prima routine, le altre sono in fila dopo di essa a distanza di 12 byte l'una dall'altra
+    la $t4, routine0Address             # Carica in t4 l'indirizzo della cella di routine0Address (prima routine)
+    addu $t3, $t3, $t4                  # Somma all'offest l'indirizzo della prima routine, le altre sono in fila dopo di essa a distanza di 12 byte l'una dall'altra
     jal $t3                             # Salta all'indirizzo della routine e aggiorna $ra in modo che terminata la routine posso andare a JALM+4 -> istruzione successiva a questa
 
     j end                               # termina il programma
@@ -76,22 +76,22 @@ errore:
 
 # lampeggio led
 led_loop:
-    add $t4, $zero, $t2
+    add $t4, $zero, $t2                 # Aggiunge in t4 il contenuto di t2
     sw $zero, 0($v0)                    # Scrive il valore 0 nella cella LED (led spento)
     jal delay_loop                      # Salta alla funzione delay per un ritardo di 2 secondi
 
-    add $t4, $zero, $t2
+    add $t4, $zero, $t2                 # Aggiunge in t4 il contenuto di t2
     sw $t3, 0($v0)                      # Scrive il valore 8000 nella cella LED (led acceso)
     jal delay_loop                      # Salta alla funzione delay per un ritardo di 2 secondi
 
     addi $t5, $t5, -0x00000002          # Sottrae 2 dal contatore dei secondi rimanenti
     beq $t5, $zero, end                 # Salta al ciclo del led se il contatore non è zero
-    j led_loop                          # ritorno a led loop e ricomincio il ciclo di lampeggio
+    j led_loop                          # ritorna a led loop e ricomincio il ciclo di lampeggio
 
 # Gestione contatore per il lampeggio
 delay_loop:                             # 2.000.000.000 / 4 = 500.000.000 cicli = 1 sec, dato che abbiamo 2 istruzioni => 2*1 = 2 secondi
     addi $t4, $t4, -0x00000004          # Decrementa il contatore del ritardo di (1/500000000)*2 secondi, espresso in nanosecondi = 4
-    bnez $t4, delay_loop                # Ripeti il ciclo finché il contatore non è zero
+    bnez $t4, delay_loop                # Ripete il ciclo finché il contatore non è zero
     jr $ra
 
 
@@ -181,15 +181,15 @@ routine15Address:
 
 # Fine Programma
 end:
-    addu $t0, $zero, 0x10010004     # Carico in t0 l'indirizzo di LED
-    sw $zero, 0($t0)                # Azzero il registro LED
-    andi $t7, $t7, 0x00000000       # Carico 0x00000000 in t7    
-    move $t0, $t7                   # Azzero t0
-    move $t1, $t7                   # Azzero t1
-    move $t2, $t7                   # Azzero t2
-    move $t3, $t7                   # Azzero t3
-    move $t4, $t7                   # Azzero t4
-    move $t5, $t7                   # Azzero t5
-    j ver_command                   # Ritorno alla verifica di command
+    addu $t0, $zero, 0x10010004     # Carica in t0 l'indirizzo di LED
+    sw $zero, 0($t0)                # Azzera il registro LED
+    andi $t7, $t7, 0x00000000       # Carica 0x00000000 in t7    
+    move $t0, $t7                   # Azzera t0
+    move $t1, $t7                   # Azzera t1
+    move $t2, $t7                   # Azzera t2
+    move $t3, $t7                   # Azzera t3
+    move $t4, $t7                   # Azzera t4
+    move $t5, $t7                   # Azzera t5
+    j ver_command                   # Ritorna alla verifica di command
 
 
