@@ -46,9 +46,9 @@ controllo:
 
     la $t1, COMMAND                     # Inserisce in t1 l'indirizzo della cella di COMMAND
     lb $t1, 0($t1)                      # Inserisce in t1 il di COMMAND  --> Esempio: 1110 0001                 
-    andi $t1, $t1, 0x000000FF           # Moltiplica il contenuto di t1 con 0x000000FF, essendo che COMMAND è a 8 bit e un registro è a 32 bit => azzero tutti i bit tranne quelli che mi servono
-    andi $t2, $t1, 0x000000F0           # Estrae il nybble piu significativo  -->  1110 0000 => azzero tutti i bit tranne quelli che mi servono
-    andi $t3, $t1, 0x0000000F           # Estrae il nybble meno significativo -->  0000 0001 => azzero tutti i bit tranne quelli che mi servono
+    andi $t1, $t1, 0x000000FF           # Moltiplica il contenuto di t1 con 0x000000FF, essendo che COMMAND è a 8 bit e un registro è a 32 bit => azzera tutti i bit tranne quelli che mi servono
+    andi $t2, $t1, 0x000000F0           # Estrae il nybble piu significativo  -->  1110 0000 => azzera tutti i bit tranne quelli che mi servono
+    andi $t3, $t1, 0x0000000F           # Estrae il nybble meno significativo -->  0000 0001 => azzera tutti i bit tranne quelli che mi servono
     
     # Verifica la correttezza di COMMAND
     srl $t2, $t2, 4                     # Shift a destra il nybble più significativo di 4 posizioni  -->  0000 1110
