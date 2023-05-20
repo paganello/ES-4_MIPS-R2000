@@ -192,4 +192,3 @@ end:
     move $t5, $t7                   # Azzera t5
     j ver_command                   # Ritorna alla verifica di command
 
-
