@@ -76,11 +76,11 @@ errore:
 
 # lampeggio led
 led_loop:
-    add $t4, $zero, $t2                 # Mette in t4 il contenuto di t2
+    add $t4, $zero, $t2                 # Aggiunge in t4 il contenuto di t2
     sw $zero, 0($v0)                    # Scrive il valore 0 nella cella LED (led spento)
     jal delay_loop                      # Salta alla funzione delay per un ritardo di 2 secondi
 
-    add $t4, $zero, $t2                 # Mette in t4 il contenuto di t2
+    add $t4, $zero, $t2                 # Aggiunge in t4 il contenuto di t2
     sw $t3, 0($v0)                      # Scrive il valore 8000 nella cella LED (led acceso)
     jal delay_loop                      # Salta alla funzione delay per un ritardo di 2 secondi
 
